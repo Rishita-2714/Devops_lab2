@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Level 2 - Tree Traversal Mastery</title>
+    <style>
+        /* General Reset */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f1f1f1;
+            min-height: 100vh;
+            color: #202021;
+            padding: 40px 20px;
+        }
+        
+        #container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+        }
+        
+        #instructions {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            width: 45%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h2 {
+            font-size: 1.6rem;
+            color: #2c3e50;
+        }
+        
+        ul {
+            margin-top: 10px;
+            line-height: 1.6;
+        }
+        
+        #status {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            width: 30%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        #status div {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        
+        #game-container {
+            width: 100%;
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        #tree-visualization {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background-color: #e9f5ff;
+            border: 2px solid #4f46e5;
+            border-radius: 10px;
+            overflow: visible;
+            margin: 30px 0;
+            box-sizing: border-box;
+        }
+        
+        .node {
+            position: absolute;
+            background-color: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-size: 14px;
+            width: 40px;
+            height: 40px;
+            font-weight: bold;
+        }
+        
+        .node.active {
+            background-color: #ffa500;
+        }
+        
+        .node.hint {
+            background-color: #00c853;
+        }
+        
+        .line {
+            position: absolute;
+            background-color: #007acc;
+            z-index: 1;
+            height: 0.5px;
+        }
+        
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4f46e5;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #005f99;
+        }
+        
+        @media (max-width: 768px) {
+            #instructions,
+            #status {
+                width: 100%;
+                max-width: 600px;
+            }
+            #tree-visualization {
+                height: 350px;
+            }
+        }
+        
+        .back-button {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 1000;
+            transition: background-color 0.3s;
+        }
+        
+        .back-button:hover {
+            background-color: #4338ca;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <header>
+            <h1 data-testid="header">Tree Traversal Mastery</h1>
+        </header>
+
+        <div id="main-content">
+            <div id="instructions">
+                <h2 data-testid="instructions-header">Welcome to the Tree Traversal Mastery Game!</h2>
+                <ul data-testid="instructions-list">
+                    <li>Progress through levels with increasing tree complexity.</li>
+                    <li>Choose the traversal type and guess the order of nodes.</li>
+                    <li>Incorrect guesses deduct points and reset the traversal.</li>
+                    <li>Finish within the timer to move to the next level.</li>
+                </ul>
+            </div>
+            <div id="status" data-testid="status-container">
+                <div id="level" data-testid="level-display">Level: 1</div>
+                <div id="score" data-testid="score-display">Score: 0</div>
+                <div id="timer" data-testid="timer-display">Time Left: 60s</div>
+            </div>
+        </div>
+
+        <div id="game-container">
+            <div id="tree-visualization" data-testid="tree-visualization"></div>
+            <div id="controls">
+                <button data-testid="preorder-btn" onclick="startTraversal('preorder')">Preorder</button>
+                <button data-testid="inorder-btn" onclick="startTraversal('inorder')">Inorder</button>
+                <button data-testid="postorder-btn" onclick="startTraversal('postorder')">Postorder</button>
+                <button data-testid="hint-btn" onclick="showHint()">Hint (-2 points)</button>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="window.history.back()" class="back-button">
+        ← Back to Dashboard
+    </button>
+</body>
+
+</html>
