@@ -1,20 +1,17 @@
-# Use Node.js LTS version as base image
-FROM node:14
+# Use Node.js base image
+FROM node:18-alpine
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
-
-# Install Node.js dependencies
-RUN npm install
-
-# Copy all other source code to working directory
+# Copy all project files
 COPY . .
 
-# Expose the app's port (change if needed)
+# Install simple HTTP server
+RUN npm install -g http-server
+
+# Expose port 4000
 EXPOSE 4000
 
-# Start the app
-CMD ["npm", "start"]
+# Run the site using http-server
+CMD ["http-server", "-p", "4000"]
